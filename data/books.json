@@ -1,0 +1,65 @@
+[
+    {
+        "titulo": "A Última Festa",
+        "autor": "Lucy Foley",
+        "isbn": 9788551005729,
+        "paginas": 304,
+        "ano": 2020
+    },
+    {
+        "titulo": "Coragem",
+        "autor": "Raina Telgemeier",
+        "isbn": 9788551006542,
+        "paginas": 224,
+        "ano": 2020
+    },
+    {
+        "titulo": "A Convenção das Aves",
+        "autor": "Ransom Riggs",
+        "isbn": 9788551006238,
+        "paginas": 320,
+        "ano": 2020
+    },
+    {
+        "titulo": "Como o Cérebro Cria",
+        "autor": "David Eagleman",
+        "isbn": 9788551006481,
+        "paginas": 304,
+        "ano": 2020
+    },
+    {
+        "titulo": "Território Lovecraft",
+        "autor": "Matt Ruff",
+        "isbn": 9788551006207,
+        "paginas": 352,
+        "ano": 2020
+    },
+    {
+        "titulo": "Para Todos os Garotos que Já Amei",
+        "autor": "Jenny Han",
+        "isbn": 9788580577266,
+        "paginas": 320,
+        "ano": 2020
+    },
+    {
+        "titulo": "P.S.: Ainda Amo Você",
+        "autor": "Jenny Han",
+        "isbn": 9788580578690,
+        "paginas": 304,
+        "ano": 2020
+    },
+    {
+        "titulo": "O Livro de Líbero",
+        "autor": "Alfredo Nugent Setubal",
+        "isbn": 9788551006177,
+        "paginas": 256,
+        "ano": 2020
+    },
+    {
+        "titulo": "Você não merece ser feliz",
+        "autor": "Daniel Furlan",
+        "isbn": 9788551006443,
+        "paginas": 160,
+        "ano": 2020
+    }
+]
