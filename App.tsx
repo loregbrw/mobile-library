@@ -9,14 +9,55 @@ import {
   Image 
 } from 'react-native';
 
-
-const Cards = [
-  { id: '1', titulo: 'OutSystems', descricao: 'Desenvolvimento de aplicações com OutSystems na Bosch.', cor: '#e11d48' },
-  { id: '2', titulo: 'Full Stack Dev', descricao: 'Experiência com C, Python, C#, JavaScript, SQL e outra tecnologias.', cor: '#38bdf8' },
-  { id: '3', titulo: 'Idiomas', descricao: 'Português nativo e Inglês avançado.', cor: '#a855f7' },
-  { id: '4', titulo: 'Data Analytics', descricao: 'Experiência com bancos de dados, tratamento de dados e Power BI.', cor: '#10b981' },
-  { id: '5', titulo: 'Voluntariado', descricao: 'Trabalho voluntário no Instituto Robert Bosch, ensinando programação.', cor: '#f59e0b' },
-  { id: '6', titulo: 'Trajetória', descricao: 'Iniciei como Aprendiz na Bosch e agora sigo como Meio Oficial, antes estava no planejamento trabalhando com análise de dados e atualmente estou desenvolvendo aplicações focadas em IA.', cor: '#a4bad8ff' },
+const Livros = [
+  { 
+    id: '1', 
+    titulo: 'O Senhor dos Anéis', 
+    autor: 'J.R.R. Tolkien',
+    descricao: 'Uma jornada épica pela Terra Média para destruir o Um Anel.', 
+    categoria: 'Fantasia',
+    cor: '#f59e0b' 
+  },
+  { 
+    id: '2', 
+    titulo: '1984', 
+    autor: 'George Orwell',
+    descricao: 'Uma distopia assustadora sobre vigilância governamental e totalitarismo.', 
+    categoria: 'Ficção Científica',
+    cor: '#e11d48' 
+  },
+  { 
+    id: '3', 
+    titulo: 'Dom Casmurro', 
+    autor: 'Machado de Assis',
+    descricao: 'Bentinho narra sua história e sua dúvida eterna sobre a fidelidade de Capitu.', 
+    categoria: 'Clássico Brasileiro',
+    cor: '#10b981' 
+  },
+  { 
+    id: '4', 
+    titulo: 'O Hobbit', 
+    autor: 'J.R.R. Tolkien',
+    descricao: 'Bilbo Bolseiro sai de sua zona de conforto para uma aventura com anões e um dragão.', 
+    categoria: 'Fantasia',
+    cor: '#38bdf8' 
+  },
+  { 
+    id: '5', 
+    titulo: 'Admirável Mundo Novo', 
+    autor: 'Aldous Huxley',
+    descricao: 'Uma sociedade moldada pela genética e pelo consumo condicionado.', 
+    categoria: 'Distopia',
+    cor: '#a855f7' 
+  },
+  { 
+    id: '6', 
+    titulo: 'Sapiens', 
+    autor: 'Yuval Noah Harari',
+    descricao: 'Uma breve história da humanidade, do surgimento da espécie até os dias atuais.', 
+    categoria: 'História / Ciência',
+    cor: '#a4bad8ff' 
+  },
 ];
 
 export default function App() {
@@ -26,33 +67,30 @@ export default function App() {
       
       <ScrollView contentContainerStyle={styles.container}>
         
-        <View style={styles.profileSection}>
-          <Image 
-            source={require('./assets/perfil.jpeg')} 
-            style={styles.profileImage} 
-          />
+        <View style={styles.headerSection}>
+          <View style={styles.iconCircle}>
+            <Text style={styles.iconEmoji}>📚</Text>
+          </View>
           <View style={styles.headerText}>
-            <Text style={styles.userName}>Adrian Gobara Falci</Text>
-            <Text style={styles.userRole}>Software Developer</Text>
+            <Text style={styles.libraryName}>Biblioteca</Text>
+            <Text style={styles.libraryStatus}>6 livros catalogados</Text>
           </View>
         </View>
 
-        <View style={styles.aboutBox}>
-          <Text style={styles.aboutTitle}>Sobre mim</Text>
-          <Text style={styles.aboutText}>
-            Desenvolvedor Full Stack, no momento trabalhando com OutSystems. 
-            Atualmente trabalho na Bosch em um time focado em IA.
-          </Text>
-        </View>
+        <Text style={styles.sectionTitle}>Acervo Disponível</Text>
 
-        <Text style={styles.sectionTitle}>Skills & Experiências</Text>
-
-        {Cards.map((skill) => (
-          <View key={skill.id} style={styles.card}>
-            <View style={[styles.cardIndicator, { backgroundColor: skill.cor }]} />
+        {Livros.map((livro) => (
+          <View key={livro.id} style={styles.card}>
+            <View style={[styles.cardIndicator, { backgroundColor: livro.cor }]} />
             <View style={styles.cardContent}>
-              <Text style={[styles.cardTitle, { color: skill.cor }]}>{skill.titulo}</Text>
-              <Text style={styles.cardDescription}>{skill.descricao}</Text>
+              <View style={styles.cardHeader}>
+                <Text style={[styles.cardTitle, { color: '#f8fafc' }]}>{livro.titulo}</Text>
+                <View style={[styles.tag, { borderColor: livro.cor }]}>
+                  <Text style={[styles.tagText, { color: livro.cor }]}>{livro.categoria}</Text>
+                </View>
+              </View>
+              <Text style={styles.cardAuthor}>por {livro.autor}</Text>
+              <Text style={styles.cardDescription}>{livro.descricao}</Text>
             </View>
           </View>
         ))}
@@ -71,86 +109,113 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
-  profileSection: {
+  headerSection: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 25,
   },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: '#38bdf8',
+  iconCircle: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#1e293b',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+  iconEmoji: {
+    fontSize: 32,
   },
   headerText: {
-    marginLeft: 20,
+    marginLeft: 15,
   },
-  userName: {
-    fontSize: 22,
+  libraryName: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#f8fafc',
   },
-  userRole: {
+  libraryStatus: {
     fontSize: 14,
     color: '#38bdf8',
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
-  aboutBox: {
+  infoBox: {
     backgroundColor: '#1e293b',
-    padding: 15,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 15,
     marginBottom: 30,
     borderLeftWidth: 4,
     borderLeftColor: '#38bdf8',
   },
-  aboutTitle: {
+  infoTitle: {
     color: '#f8fafc',
     fontWeight: 'bold',
-    marginBottom: 5,
+    fontSize: 16,
+    marginBottom: 8,
   },
-  aboutText: {
+  infoText: {
     color: '#94a3b8',
-    lineHeight: 20,
+    lineHeight: 22,
     fontSize: 14,
   },
   sectionTitle: {
-    fontSize: 16,
-    color: '#94a3b8',
+    fontSize: 14,
+    color: '#64748b',
     marginBottom: 15,
     textTransform: 'uppercase',
-    letterSpacing: 2,
-    fontWeight: '700',
+    letterSpacing: 1.5,
+    fontWeight: '800',
   },
   card: {
     backgroundColor: '#1e293b',
-    borderRadius: 12,
-    marginBottom: 12,
+    borderRadius: 16,
+    marginBottom: 16,
     flexDirection: 'row',
     overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    borderWidth: 1,
+    borderColor: '#334155',
   },
   cardIndicator: {
-    width: 5,
+    width: 6,
   },
   cardContent: {
     padding: 16,
     flex: 1,
   },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
   cardTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: 'bold',
-    marginBottom: 4,
+    flex: 1,
+    marginRight: 10,
+  },
+  cardAuthor: {
+    fontSize: 13,
+    color: '#38bdf8',
+    fontStyle: 'italic',
+    marginBottom: 8,
+    marginTop: 2,
   },
   cardDescription: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#94a3b8',
-    lineHeight: 18,
+    lineHeight: 20,
+  },
+  tag: {
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 20,
+  },
+  tagText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
 });
