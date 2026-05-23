@@ -1,22 +1,39 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
+import { Text, StyleSheet, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../App';
 
 interface ICardProps {
+    index: number
     title: string
     description: string
     info?: string
 }
 
+type NavigationProps = StackNavigationProp<
+    RootStackParamList,
+    'BookDetails'
+>;
+
 const Card = (props: ICardProps) => {
+
+    const navigation = useNavigation<NavigationProps>();
+
+    const handleGoToDetails = () => {
+        navigation.navigate('BookDetails', { index: props.index });
+    };
+
     return (
-        <View style={styles.card}>
+        <Pressable style={styles.card} onPress={handleGoToDetails}>
             <Text style={styles.title}>{props.title}</Text>
             <Text style={styles.description}>{props.description}</Text>
             {
                 props.info &&
                 <Text style={styles.info}>{props.info}</Text>
             }
-        </View>
+        </Pressable>
     );
 };
 

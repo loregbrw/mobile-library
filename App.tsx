@@ -1,45 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import 'react-native-gesture-handler';
 
-import Card from './components/Card';
-import Header from './components/Header';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-// https://www.kaggle.com/datasets/diegomariano/tabela-de-livros?select=livros.json
-import Books from './data/books.json'
-import BookImg from './assets/book.png';
+import BookList from './screens/BookList';
+import BookDetails from './screens/BookDetails';
+
+export type RootStackParamList = {
+    BookList: undefined;
+    BookDetails: { index: number };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
     return (
-        <View style={styles.global}>
-            <Header image={BookImg} title={'Biblioteca'} />
-            <ScrollView style={styles.scrollViewContainer}>
-                <View style={styles.container}>
-                    {
-                        Books.map((book, i) => (
-                            <Card key={i} title={book.titulo} description={`${book.autor}, ${book.ano}`} info={`${book.paginas} páginas`} />
-                        ))
-                    }
-                    <Text>Lorena Gobara Falci, XGH</Text>
-                    <StatusBar style="auto" />
-                </View>
-            </ScrollView>
-        </View>
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="BookList">
+                <Stack.Screen
+                    name="BookList"
+                    component={BookList}
+                    options={{ title: 'Lista de Livros' }}
+                />
+                <Stack.Screen
+                    name="BookDetails"
+                    component={BookDetails}
+                    options={{ title: 'Detalhes' }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    global: {
-        flex: 1,
-    },
-    scrollViewContainer: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-    },
-    container: {
-        flex: 1,
-        padding: 15,
-        gap: 15,
-        backgroundColor: '#f5f5f5',
-        paddingBottom: 50
-    },
-});
