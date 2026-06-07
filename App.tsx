@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import BookList from './screens/BookList';
+import Home from './screens/Home';
 import BookDetails from './screens/BookDetails';
 
 export type RootStackParamList = {
@@ -19,7 +19,7 @@ export default function App() {
             <Stack.Navigator initialRouteName="BookList">
                 <Stack.Screen
                     name="BookList"
-                    component={BookList}
+                    component={Home}
                     options={{ title: 'Lista de Livros' }}
                 />
                 <Stack.Screen

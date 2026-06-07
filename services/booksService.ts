@@ -11,7 +11,7 @@ interface IBookSearchFilters {
 }
 
 export class BooksService {
-    static async search(
+    static async getBooks(
         filters: IBookSearchFilters
     ): Promise<IPaginatedBooksResponse> {
 
