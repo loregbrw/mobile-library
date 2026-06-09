@@ -1,51 +1,103 @@
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { BooksService } from '../services/booksService';
-import { StyleSheet, Text, View, ScrollView, TextInput } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import Card from '../components/Card';
 import Header from '../components/Header';
 
-// https://www.kaggle.com/datasets/diegomariano/tabela-de-livros?select=livros.json
-import Books from '../data/books.json'
 import BookImg from '../assets/book.png';
 import Input from '../components/Input';
 import Select from '../components/Select';
-import { EBookGenre } from '../types';
+import { EBookGenre, IVolume } from '../types';
 import { BookGenreLabels } from '../constants/book';
+import Book from '../components/Book';
+import Button from '../components/Button';
 
 const Home = () => {
+
+    const [books, setBooks] = useState<IVolume[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchText, setSearchText] = useState('');
 
     const genreOptions = Object.values(EBookGenre).map(genre => ({
         label: BookGenreLabels[genre],
         value: genre,
     }));
 
-    const [genre, setGenre] = useState<EBookGenre>(
-        EBookGenre.Fantasy
-    );
+    const [genre, setGenre] = useState<EBookGenre>(EBookGenre.Fantasy);
 
-    const search = () => {
-
+    const search = (value: string) => {
+        setSearchText(value);
+        setPage(1);
     }
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                setIsLoading(true);
+                const response = await BooksService.getBooks({
+                    genre,
+                    page,
+                    pageSize: 40,
+                    query: searchText,
+                });
+                setBooks(response.items ?? []);
+                setTotalPages(response.totalPages || 1);
+            } catch (err) {
+                console.error('Erro ao buscar livros:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchBooks();
+        setIsLoading(false);
+    }, [genre, page, searchText]);
+
+    const handleGenreChange = (value: string) => {
+        setGenre(value as EBookGenre);
+        setPage(1);
+    };
+
+    const goToPreviousPage = () => {
+        setPage(currentPage => Math.max(currentPage - 1, 1));
+    };
+
+    const goToNextPage = () => {
+        setPage(currentPage => Math.min(currentPage + 1, totalPages));
+    };
 
     return (
         <View style={styles.global}>
             <Header image={BookImg} title={"Biblioteca LGF."} />
-            <View style={styles.options}>
-                <Input title="Pesquise um livro ou autor" button="Pesquisar" onSearch={search} />
-                <Select title={"Selecione um gênero:"} options={genreOptions} value={genre} onChange={value => setGenre(value as EBookGenre)} />
-            </View>
-            <ScrollView style={styles.scrollViewContainer}>
-                <View style={styles.container}>
-                    {
-                        Books.map((book, i) => (
-                            <Card key={i} index={i} title={book.titulo} description={`${book.autor}, ${book.ano}`} info={`${book.paginas} páginas`} />
-                        ))
-                    }
-                    <StatusBar style="auto" />
+            <View style={styles.container}>
+                <View style={styles.options}>
+                    <Input title="Pesquise um livro ou autor" placeholder="Digite um livro ou autor..." button="Pesquisar" onSearch={search} />
+                    <Select title={"Selecione um gênero:"} options={genreOptions} value={genre} onChange={handleGenreChange} />
                 </View>
-            </ScrollView>
+                <ScrollView
+                    style={styles.books}
+                    contentContainerStyle={styles.booksContent}
+                    persistentScrollbar={true}
+                >
+                    {books.map((item, index) => (
+                        <Book key={index} volume={item} />
+                    ))}
+                </ScrollView>
+                <View style={styles.pagination}>
+                    <Button title="Anterior" onClick={goToPreviousPage} disabled={page === 1} />
+
+                    <Text style={styles.pageText}>
+                        Página {page} de {totalPages}
+                    </Text>
+
+                    <Button title="Próxima" onClick={goToNextPage} disabled={page >= totalPages} />
+                </View>
+                <StatusBar style="auto" />
+            </View>
         </View>
     )
 }
@@ -53,21 +105,37 @@ const Home = () => {
 const styles = StyleSheet.create({
     global: {
         flex: 1,
+        backgroundColor: '#f5f5f5',
+    },
+    container: {
+        flex: 1,
+        padding: 15
     },
     options: {
         gap: 5,
         backgroundColor: '#f5f5f5',
-        padding: 15,
+        paddingBottom: 10,
     },
-    scrollViewContainer: {
+    books: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
     },
-    container: {
-        padding: 15,
-        gap: 15,
+    booksContent: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        gap: 20,
+    },
+    pagination: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
         backgroundColor: '#f5f5f5',
-        paddingBottom: 50
+        paddingTop: 10
+    },
+    pageText: {
+        color: '#2b2b2b',
+        fontWeight: '600',
     },
 });
 

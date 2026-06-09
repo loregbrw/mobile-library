@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import Button from './Button';
 
 interface IInputProps {
     title: string;
@@ -15,7 +16,6 @@ const Input = (props: IInputProps) => {
     const handleSearch = () => {
         const text = value.trim();
 
-        if (!text) return;
         props.onSearch(text);
     };
 
@@ -33,11 +33,7 @@ const Input = (props: IInputProps) => {
                     onSubmitEditing={handleSearch}
                 />
 
-                <Pressable style={styles.button} onPress={handleSearch}>
-                    <Text style={styles.text}>
-                        {props.button}
-                    </Text>
-                </Pressable>
+                <Button title={props.button} onClick={handleSearch} />
             </View>
         </View>
     );

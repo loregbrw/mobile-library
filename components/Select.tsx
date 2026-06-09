@@ -2,23 +2,21 @@ import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View, FlatList, } from 'react-native';
 
 export interface ISelectOption {
-    label: string;
-    value: string;
+    label: string
+    value: string
 }
 
 interface ISelectProps {
-    title: string;
-    options: ISelectOption[];
-    value: string;
-    onChange: (value: string) => void;
+    title: string
+    options: ISelectOption[]
+    value: string
+    onChange: (value: string) => void
 }
 
 const Select = (props: ISelectProps) => {
     const [visible, setVisible] = useState(false);
 
-    const selected =
-        props.options.find(option => option.value === props.value)?.label ??
-        'Selecione';
+    const selected = props.options.find(option => option.value === props.value)?.label ?? "Selecione";
 
     const handleSelect = (value: string) => {
         props.onChange(value);
@@ -30,53 +28,27 @@ const Select = (props: ISelectProps) => {
             <View style={styles.container}>
                 <Text style={styles.title}>{props.title}</Text>
 
-                <Pressable
-                    style={styles.select}
-                    onPress={() => setVisible(true)}
-                >
-                    <Text style={styles.select_text}>
-                        {selected}
-                    </Text>
-
-                    <Text style={styles.arrow}>
-                        ▼
-                    </Text>
+                <Pressable style={styles.select} onPress={() => setVisible(true)} >
+                    <Text style={styles.select_text}>{selected}</Text>
+                    <Text style={styles.arrow}>▼</Text>
                 </Pressable>
             </View>
 
-            <Modal
-                visible={visible}
-                transparent
-                animationType="fade"
-                onRequestClose={() => setVisible(false)}
-            >
-                <Pressable
-                    style={styles.backdrop}
-                    onPress={() => setVisible(false)}
-                >
+            <Modal visible={visible} transparent animationType="fade" onRequestClose={() => setVisible(false)} >
+                <Pressable style={styles.backdrop} onPress={() => setVisible(false)}>
                     <View style={styles.modal}>
-                        <FlatList
-                            data={props.options}
-                            keyExtractor={item => item.value}
-                            renderItem={({ item }) => (
-                                <Pressable
-                                    style={styles.option}
-                                    onPress={() =>
-                                        handleSelect(item.value)
-                                    }
-                                >
-                                    <Text
-                                        style={[
-                                            styles.option_text,
-                                            item.value === props.value &&
-                                            styles.selected_option,
-                                        ]}
-                                    >
-                                        {item.label}
-                                    </Text>
-                                </Pressable>
-                            )}
-                        />
+                        <FlatList data={props.options} keyExtractor={item => item.value} renderItem={({ item }) => (
+                            <Pressable
+                                style={styles.option}
+                                onPress={() =>
+                                    handleSelect(item.value)
+                                }
+                            >
+                                <Text style={[styles.option_text, item.value === props.value && styles.selected_option]} >
+                                    {item.label}
+                                </Text>
+                            </Pressable>
+                        )} />
                     </View>
                 </Pressable>
             </Modal>
