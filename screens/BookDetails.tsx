@@ -3,7 +3,9 @@ import { BooksService } from "../services/booksService";
 import { RootStackParamList } from "../App";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { View, Image, StyleSheet, ActivityIndicator, Text, useWindowDimensions, ScrollView } from "react-native";
+import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, TouchableOpacity } from "react-native";
+import { useFavorites } from '../context/FavoritesContext';
+import { Ionicons } from '@expo/vector-icons';
 
 import Header from "../components/Header";
 import BookImg from '../assets/book.png';
@@ -22,18 +24,16 @@ const BookDetails = () => {
     const route = useRoute<BookDetailsRouteProp>();
     const { id } = route.params;
 
-    const { width } = useWindowDimensions();
-    const tagsStyles = {
-        p: {
-            textAlign: 'justify',
-        },
-        div: {
-            textAlign: 'justify',
-        },
-        li: {
-            textAlign: 'justify',
-        },
+    const { isFavorite, toggleFavorite } = useFavorites();
+
+    const handleToggleFavorite = () => {
+        if (volume?.id) toggleFavorite(volume.id);
     };
+
+    const isFav = volume?.id ? isFavorite(volume.id) : false;
+
+    const favoriteIconName = isFav ? 'heart' : 'heart-outline';
+    const favoriteIconColor = isFav ? 'red' : 'gray';
 
     useEffect(() => {
         const fetchBook = async () => {
@@ -73,7 +73,12 @@ const BookDetails = () => {
                             />
 
                             <View style={styles.content}>
-                                <Text style={styles.title}>{volume?.volumeInfo.title}</Text>
+                                <View style={styles.header}>
+                                    <Text style={styles.title}>{volume?.volumeInfo.title}</Text>
+                                    <TouchableOpacity onPress={handleToggleFavorite} style={styles.favoriteButton}>
+                                        <Ionicons name={favoriteIconName} size={20} color={favoriteIconColor} />
+                                    </TouchableOpacity>
+                                </View>
                                 <Text>{volume?.volumeInfo.subtitle}</Text>
                                 <Text>{`Escrito por ${volume?.volumeInfo.authors?.join(", ")}`}</Text>
                                 <Text style={styles.publisher}>{`Editora: ${volume?.volumeInfo.publisher}, ${volume?.volumeInfo.publishedDate}`}</Text>
@@ -122,6 +127,12 @@ const styles = StyleSheet.create({
         marginRight: 15,
         flexShrink: 0,
     },
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+    },
     content: {
         flex: 1,
     },
@@ -131,7 +142,8 @@ const styles = StyleSheet.create({
     },
     publisher: {
         marginVertical: 10
-    }
+    },
+    favoriteButton: { padding: 5 },
 });
 
 export default BookDetails;
