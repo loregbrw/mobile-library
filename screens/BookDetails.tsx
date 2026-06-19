@@ -3,7 +3,7 @@ import { BooksService } from "../services/booksService";
 import { RootStackParamList } from "../App";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, TouchableOpacity, useWindowDimensions } from "react-native";
 import { useFavorites } from '../context/FavoritesContext';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -50,6 +50,10 @@ const BookDetails = () => {
 
         fetchBook();
     }, [id])
+
+    const { width } = useWindowDimensions();
+
+    if (!width) return null;
 
     return (
         <View style={styles.global}>
