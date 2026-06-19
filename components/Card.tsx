@@ -22,7 +22,7 @@ const Card = (props: ICardProps) => {
     const navigation = useNavigation<NavigationProps>();
 
     const handleGoToDetails = () => {
-        navigation.navigate('BookDetails', { index: props.index });
+        navigation.navigate('BookDetails', { id: props.index });
     };
 
     return (

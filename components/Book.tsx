@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, Pressable } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { IVolume } from "../types";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -18,11 +18,11 @@ const Book = (props: IBookProps) => {
     const navigation = useNavigation<NavigationProps>();
 
     const handleGoToDetails = () => {
-        navigation.navigate('BookDetails', { index: props.index });
+        navigation.navigate('BookDetails', { id: props.volume.id });
     };
 
     return (
-        <Pressable style={styles.container} onPress={handleGoToDetails}>
+        <TouchableOpacity style={styles.touchable} onPress={handleGoToDetails}>
             <Image
                 style={styles.image}
                 source={{
@@ -31,12 +31,12 @@ const Book = (props: IBookProps) => {
             />
             <Text style={styles.title} numberOfLines={2}>{props.volume.volumeInfo.title}</Text>
             <Text style={styles.author}>{`${props.volume.volumeInfo.authors?.join(", ")}, ${props.volume.volumeInfo.publishedDate}`}</Text>
-        </Pressable>
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
+    touchable: {
         width: 170,
         display: "flex",
         alignItems: "center",
@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     author: {
-        fontSize: 10
+        fontSize: 10,
+        textAlign: "center"
     }
 })
 

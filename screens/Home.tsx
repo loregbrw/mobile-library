@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { BooksService } from '../services/booksService';
-import { ActivityIndicator, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import Header from '../components/Header';
 
@@ -54,7 +54,6 @@ const Home = () => {
         };
 
         fetchBooks();
-        setIsLoading(false);
     }, [genre, page, searchText]);
 
     const handleGenreChange = (value: string) => {
@@ -72,21 +71,27 @@ const Home = () => {
 
     return (
         <View style={styles.global}>
-            <Header image={BookImg} title={"Biblioteca LGF."} />
+            <Header image={BookImg} title={"Livros XGH."} />
             <View style={styles.container}>
                 <View style={styles.options}>
                     <Input title="Pesquise um livro ou autor" placeholder="Digite um livro ou autor..." button="Pesquisar" onSearch={search} />
                     <Select title={"Selecione um gênero:"} options={genreOptions} value={genre} onChange={handleGenreChange} />
                 </View>
-                <ScrollView
-                    style={styles.books}
-                    contentContainerStyle={styles.booksContent}
-                    persistentScrollbar={true}
-                >
-                    {books.map((item, index) => (
-                        <Book key={index} volume={item} />
-                    ))}
-                </ScrollView>
+
+                {
+                    isLoading
+                        ? <ActivityIndicator size="large" color="#2b2b2b" />
+                        :
+                        <ScrollView
+                            style={styles.books}
+                            contentContainerStyle={styles.booksContent}
+                            persistentScrollbar={true}
+                        >
+                            {books.map((item, index) => (
+                                <Book key={index} volume={item} />
+                            ))}
+                        </ScrollView>
+                }
                 <View style={styles.pagination}>
                     <Button title="Anterior" onClick={goToPreviousPage} disabled={page === 1} />
 

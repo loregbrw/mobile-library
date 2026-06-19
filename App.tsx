@@ -8,7 +8,7 @@ import BookDetails from './screens/BookDetails';
 
 export type RootStackParamList = {
     BookList: undefined;
-    BookDetails: { index: number };
+    BookDetails: { id: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
