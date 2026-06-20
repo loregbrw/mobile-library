@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Text, Image } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
-import Button from '../components/Button';
+import React from 'react';
+import Input from '../components/Input';
 import BookImg from '../assets/book.png';
+import Toast from 'react-native-toast-message';
 
 const LoginScreen = () => {
 
-    const [username, setUsername] = useState('');
     const { login } = useAuth();
 
-    const handleLogin = async () => {
-        if (!username.trim()) return;
-        await login(username);
+    const handleLogin = async (name: string) => {
+        if (!name) {
+            Toast.show({
+                type: "error",
+                text1: "Campo obrigatório!",
+                text2: "É necessário informar o nome completo para logar na plataforma."
+            });
+            return;
+        }
+
+        await login(name);
     };
 
     return (
@@ -23,8 +31,7 @@ const LoginScreen = () => {
                     <Text style={styles.title}>Guia de Livros e Bibliotecas</Text>
                     <Text>Bem vindo ao XGH.</Text>
                 </View>
-                <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername} />
-                <Button title="Login" onClick={handleLogin} />
+                <Input title="Nome completo" button="Logar" onSearch={handleLogin} />
             </View>
         </View>
     );
@@ -33,16 +40,16 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: "#f5f5f5"
     },
     card: {
         backgroundColor: "#fff",
         borderRadius: 3,
-        padding: 10,
+        padding: 20,
         alignItems: "center",
-        gap: 5
+        margin: 15,
+        marginTop: 150
     },
     header: {
         justifyContent: 'center',

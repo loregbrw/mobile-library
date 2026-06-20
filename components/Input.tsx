@@ -15,7 +15,6 @@ const Input = (props: IInputProps) => {
 
     const handleSearch = () => {
         const text = value.trim();
-
         props.onSearch(text);
     };
 

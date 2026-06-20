@@ -3,17 +3,18 @@ import { TouchableOpacity, StyleSheet, Text } from "react-native";
 interface IButtonProps {
     title: string
     disabled?: boolean
+    outlined?: boolean
     onClick: () => void
 }
 
 const Button = (props: IButtonProps) => {
     return (
         <TouchableOpacity
-            style={[styles.button, props.disabled && styles.disabledButton]}
+            style={[styles.button, props.disabled && styles.disabledButton, props.outlined && styles.outlinedButton]}
             disabled={props.disabled}
             onPress={props.onClick}
         >
-            <Text style={styles.text}>{props.title}</Text>
+            <Text style={[styles.text, props.outlined && styles.outlinedText]}>{props.title}</Text>
         </TouchableOpacity>
     )
 };
@@ -31,9 +32,18 @@ const styles = StyleSheet.create({
     disabledButton: {
         opacity: 0.45,
     },
+    outlinedButton: {
+        borderColor: "#496b92",
+        borderWidth: 2,
+        backgroundColor: "#fff",
+    },
     text: {
         fontWeight: "600",
         color: "#fff"
+    },
+    outlinedText: {
+        fontWeight: "700",
+        color: "#496b92",
     }
 });
 

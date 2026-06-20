@@ -47,7 +47,7 @@ export const AuthProvider = ({ children, }: AuthProviderProps) => {
     const login = async (username: string): Promise<void> => {
         try {
             const userData: IUser = {
-                id: username.toLowerCase(),
+                id: username.trim().toLowerCase().replace(/\s+/g, "-"),
                 username,
             };
 
@@ -62,7 +62,6 @@ export const AuthProvider = ({ children, }: AuthProviderProps) => {
     const logout = async (): Promise<void> => {
         try {
             setUser(null);
-
             await AsyncStorage.removeItem(STORAGE_KEY);
         }
         catch (error) {
