@@ -1,29 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View, ScrollView, Image } from 'react-native';
-import { styles } from './src/style';
-import { livros } from './src/livro';
+import 'react-native-gesture-handler';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import Home from './screens/Home';
+import BookDetails from './screens/BookDetails';
+import { IOpenLibraryBook } from './types';
+
+export type RootStackParamList = {
+    BookList: undefined;
+    BookDetails: { book: IOpenLibraryBook };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-
-  return (
-    <ScrollView style={styles.container}>
-
-      <Text style={styles.header}>📚 Minha Biblioteca</Text>
-
-      {livros.map(function(livro) {
-        return (
-          <View key={livro.id} style={styles.card}>
-            <Image source={livro.capa} style={styles.capa} resizeMode="cover" />
-            
-            <View style={styles.infoContainer}>
-              <Text style={styles.titulo}>{livro.titulo}</Text>
-              <Text style={styles.descricao}>{livro.descricao}</Text>
-            </View>
-          </View>
-        );
-      })}
-
-      <StatusBar style="auto" />
-    </ScrollView>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="BookList">
+                <Stack.Screen
+                    name="BookList"
+                    component={Home}
+                    options={{ title: 'Lista de Livros' }}
+                />
+                <Stack.Screen
+                    name="BookDetails"
+                    component={BookDetails}
+                    options={{ title: 'Detalhes' }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
