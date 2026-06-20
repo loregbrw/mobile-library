@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { IVolume } from "../types";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../App";
+import { RootStackParamList } from "./MainTabs";
 
 interface IBookProps {
     volume: IVolume;

@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, ImageSourcePropType } from 'react-native';
 
 interface IHeaderProps {
-    image: ImageSourcePropType
-    title: string
+    image?: ImageSourcePropType
+    title?: string
 }
 
 const Header = (props: IHeaderProps) => {

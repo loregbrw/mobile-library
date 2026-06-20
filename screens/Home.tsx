@@ -1,17 +1,16 @@
-import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { BooksService } from '../services/booksService';
+import { BookGenreLabels } from '../constants/book';
+import { useEffect, useState } from 'react';
+import { EBookGenre, IVolume } from '../types';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import Header from '../components/Header';
-
-import BookImg from '../assets/book.png';
-import Input from '../components/Input';
-import Select from '../components/Select';
-import { EBookGenre, IVolume } from '../types';
-import { BookGenreLabels } from '../constants/book';
 import Book from '../components/Book';
+import Input from '../components/Input';
 import Button from '../components/Button';
+import Select from '../components/Select';
+import Header from '../components/Header';
+import BookImg from '../assets/book.png';
 
 const Home = () => {
 
@@ -82,15 +81,21 @@ const Home = () => {
                     isLoading
                         ? <ActivityIndicator size="large" color="#2b2b2b" />
                         :
-                        <ScrollView
-                            style={styles.books}
-                            contentContainerStyle={styles.booksContent}
-                            persistentScrollbar={true}
-                        >
-                            {books.map((item, index) => (
-                                <Book key={index} volume={item} />
-                            ))}
-                        </ScrollView>
+                        (
+                            !books
+                                ? <Text>AAA</Text>
+                                :
+                                <ScrollView
+                                    style={styles.books}
+                                    contentContainerStyle={styles.booksContent}
+                                    persistentScrollbar={true}
+                                >
+                                    {books.map((item, index) => (
+                                        <Book key={index} volume={item} />
+                                    ))}
+                                </ScrollView>
+
+                        )
                 }
                 <View style={styles.pagination}>
                     <Button title="Anterior" onClick={goToPreviousPage} disabled={page === 1} />
@@ -103,7 +108,7 @@ const Home = () => {
                 </View>
                 <StatusBar style="auto" />
             </View>
-        </View>
+        </View >
     )
 }
 
