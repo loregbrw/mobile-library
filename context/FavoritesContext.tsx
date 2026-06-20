@@ -1,7 +1,7 @@
+import { useAuth } from './AuthContext';
 import React, { createContext, useState, useContext, useEffect, useCallback, ReactNode, } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const FAVORITES_KEY = '@GuiaTuristico:favorites';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface FavoritesContextData {
     favoriteIds: string[];
@@ -18,48 +18,63 @@ const FavoritesContext = createContext<FavoritesContextData | undefined>(
     undefined
 );
 
-export const FavoritesProvider = ({
-    children,
-}: FavoritesProviderProps) => {
+export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
 
     const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
     const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
 
+    const { user } = useAuth();
+
+    const getFavoritesKey = () => {
+        if (!user) return null;
+        return `@XGH:favorites:${user.id}`;
+    };
+
     const loadFavorites = useCallback(async () => {
+        if (!user) {
+            setFavoriteIds([]);
+            setIsLoadingFavorites(false);
+            return;
+        }
+
         try {
-            const storedFavorites = await AsyncStorage.getItem(FAVORITES_KEY);
+            const key = getFavoritesKey();
+            const storedFavorites = await AsyncStorage.getItem(key!);
 
             if (storedFavorites) {
-                const parsed: string[] = JSON.parse(storedFavorites);
-                setFavoriteIds(parsed);
+                setFavoriteIds(JSON.parse(storedFavorites));
+            } else {
+                setFavoriteIds([]);
             }
-        } catch (error) {
-            console.error(
-                'Erro ao carregar favoritos do AsyncStorage:',
-                error
-            );
-        } finally {
+        }
+        catch (error) {
+            console.error('Erro ao carregar favoritos:', error);
+        }
+        finally {
             setIsLoadingFavorites(false);
         }
-    }, []);
+    }, [user]);
 
-    const saveFavorites = useCallback(async (ids: string[]) => {
-        try {
-            await AsyncStorage.setItem(
-                FAVORITES_KEY,
-                JSON.stringify(ids)
-            );
-        } catch (error) {
-            console.error(
-                'Erro ao salvar favoritos no AsyncStorage:',
-                error
-            );
-        }
-    }, []);
+    const saveFavorites = useCallback(
+        async (ids: string[]) => {
+            if (!user) return;
+
+            try {
+                const key = getFavoritesKey();
+
+                await AsyncStorage.setItem(key!, JSON.stringify(ids));
+            }
+            catch (error) {
+                console.error('Erro ao salvar favoritos:', error);
+            }
+        },
+        [user]
+    );
 
     useEffect(() => {
+        setIsLoadingFavorites(true);
         loadFavorites();
-    }, [loadFavorites]);
+    }, [user, loadFavorites]);
 
     useEffect(() => {
         if (!isLoadingFavorites) {
@@ -69,9 +84,10 @@ export const FavoritesProvider = ({
 
     const toggleFavorite = (id: string) => {
         setFavoriteIds(prevIds => {
-            if (prevIds.includes(id)) {
-                return prevIds.filter(id => id !== id);
-            }
+            if (prevIds.includes(id))
+                return prevIds.filter(
+                    favoriteId => favoriteId !== id
+                );
 
             return [...prevIds, id];
         });

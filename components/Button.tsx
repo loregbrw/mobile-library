@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { TouchableOpacity, StyleSheet, Text } from "react-native";
 
 interface IButtonProps {
     title: string
@@ -8,13 +8,13 @@ interface IButtonProps {
 
 const Button = (props: IButtonProps) => {
     return (
-        <Pressable
+        <TouchableOpacity
             style={[styles.button, props.disabled && styles.disabledButton]}
             disabled={props.disabled}
             onPress={props.onClick}
         >
             <Text style={styles.text}>{props.title}</Text>
-        </Pressable>
+        </TouchableOpacity>
     )
 };
 

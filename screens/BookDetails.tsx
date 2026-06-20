@@ -1,11 +1,11 @@
 import { IVolume } from "../types";
+import { Ionicons } from '@expo/vector-icons';
 import { BooksService } from "../services/booksService";
-import { RootStackParamList } from "../App";
+import { useFavorites } from '../context/FavoritesContext';
+import { RootStackParamList } from "../components/MainTabs";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, ActivityIndicator, Text, ScrollView, TouchableOpacity, useWindowDimensions } from "react-native";
-import { useFavorites } from '../context/FavoritesContext';
-import { Ionicons } from '@expo/vector-icons';
 
 import Header from "../components/Header";
 import BookImg from '../assets/book.png';
