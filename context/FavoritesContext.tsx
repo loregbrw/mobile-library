@@ -1,13 +1,21 @@
+import { IVolume } from "../types";
 import { useAuth } from './AuthContext';
 import React, { createContext, useState, useContext, useEffect, useCallback, ReactNode, } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export interface IFavoriteBook {
+    id: string
+    title: string
+    authors?: string[]
+    thumbnail?: string
+}
+
 interface FavoritesContextData {
-    favoriteIds: string[];
-    isLoadingFavorites: boolean;
-    toggleFavorite: (id: string) => void;
-    isFavorite: (id: string) => boolean;
+    favoriteBooks: IFavoriteBook[]
+    isLoadingFavorites: boolean
+    toggleFavorite: (volume: IVolume) => void
+    isFavorite: (id: string) => boolean
 }
 
 interface FavoritesProviderProps {
@@ -20,7 +28,7 @@ const FavoritesContext = createContext<FavoritesContextData | undefined>(
 
 export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
 
-    const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+    const [favoriteBooks, setFavoriteBooks] = useState<IFavoriteBook[]>([]);
     const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
 
     const { user } = useAuth();
@@ -32,7 +40,7 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
 
     const loadFavorites = useCallback(async () => {
         if (!user) {
-            setFavoriteIds([]);
+            setFavoriteBooks([]);
             setIsLoadingFavorites(false);
             return;
         }
@@ -41,11 +49,10 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
             const key = getFavoritesKey();
             const storedFavorites = await AsyncStorage.getItem(key!);
 
-            if (storedFavorites) {
-                setFavoriteIds(JSON.parse(storedFavorites));
-            } else {
-                setFavoriteIds([]);
-            }
+            if (storedFavorites)
+                setFavoriteBooks(JSON.parse(storedFavorites));
+            else
+                setFavoriteBooks([]);
         }
         catch (error) {
             console.error('Erro ao carregar favoritos:', error);
@@ -56,13 +63,16 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
     }, [user]);
 
     const saveFavorites = useCallback(
-        async (ids: string[]) => {
+        async (books: IFavoriteBook[]) => {
             if (!user) return;
 
             try {
                 const key = getFavoritesKey();
 
-                await AsyncStorage.setItem(key!, JSON.stringify(ids));
+                await AsyncStorage.setItem(
+                    key!,
+                    JSON.stringify(books)
+                );
             }
             catch (error) {
                 console.error('Erro ao salvar favoritos:', error);
@@ -77,30 +87,36 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
     }, [user, loadFavorites]);
 
     useEffect(() => {
-        if (!isLoadingFavorites) {
-            saveFavorites(favoriteIds);
-        }
-    }, [favoriteIds, isLoadingFavorites, saveFavorites]);
+        if (!isLoadingFavorites)
+            saveFavorites(favoriteBooks);
+    }, [favoriteBooks, isLoadingFavorites, saveFavorites]);
 
-    const toggleFavorite = (id: string) => {
-        setFavoriteIds(prevIds => {
-            if (prevIds.includes(id))
-                return prevIds.filter(
-                    favoriteId => favoriteId !== id
-                );
+    const toggleFavorite = (volume: IVolume) => {
+        setFavoriteBooks(previous => {
+            const exists = previous.some(book => book.id === volume.id);
 
-            return [...prevIds, id];
+            if (exists)
+                return previous.filter(book => book.id !== volume.id);
+
+            return [
+                ...previous,
+                {
+                    id: volume.id,
+                    title: volume.volumeInfo.title,
+                    authors: volume.volumeInfo.authors,
+                    thumbnail: volume.volumeInfo.imageLinks?.smallThumbnail ?? volume.volumeInfo.imageLinks?.thumbnail ?? "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png"
+                }
+            ];
         });
     };
 
     const isFavorite = useCallback(
-        (id: string) => {
-            return favoriteIds.includes(id);
-        }, [favoriteIds]
+        (id: string) => favoriteBooks.some(book => book.id === id),
+        [favoriteBooks]
     );
 
     const contextValue: FavoritesContextData = {
-        favoriteIds,
+        favoriteBooks,
         isLoadingFavorites,
         toggleFavorite,
         isFavorite,

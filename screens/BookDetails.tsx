@@ -38,7 +38,7 @@ const BookDetails = () => {
     const { isFavorite, toggleFavorite } = useFavorites();
 
     const handleToggleFavorite = () => {
-        if (volume?.id) toggleFavorite(volume.id);
+        if (volume?.id) toggleFavorite(volume);
     };
 
     const isFav = volume?.id ? isFavorite(volume.id) : false;
